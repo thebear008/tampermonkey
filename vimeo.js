@@ -22,13 +22,13 @@
             var my_json = JSON.parse(document.querySelectorAll("script[type='application/ld+json']")[0].innerHTML)
             var vimeo_author = my_json[0].author.name.replace( /[#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' )
             var vimeo_url = my_json[0].url.replace( /[#!<>:"\/\\|?*]/g, '' ).replace(/[^0-9]/g, '' )
-            var vimeo_name = my_json[0].name.replace( /[#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' )
+            //var vimeo_name = my_json[0].name.replace( /[#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' )
             var year_upload = my_json[0].uploadDate.substring(0, 4)
 
             var my_h1 = document.getElementsByTagName('h1')[0]
             var my_span = document.createElement('span')
             my_span.setAttribute('id', 'my-ged-span')
-            var my_string = document.createTextNode(vimeo_author + "|" + vimeo_url + "|" + vimeo_name + "|" + year_upload)
+            var my_string = document.createTextNode(vimeo_author + "|" + vimeo_url  + "|" + year_upload)
 
 
 
@@ -43,7 +43,6 @@
             // add the Range to the set of window selections
             window.getSelection().addRange(range);
             document.execCommand('copy');
-            alert('copy in clipboard')
         }
         return my_button
     }
