@@ -28,6 +28,8 @@
             var my_h1 = document.getElementsByTagName('h1')[0]
             var my_span = document.createElement('span')
             my_span.setAttribute('id', 'my-ged-span')
+            my_span.style.color = 'white'
+            my_span.style.fontSize = '1px'
             var my_string = document.createTextNode(vimeo_author + "=" + vimeo_url  + "=" + year_upload)
 
 
@@ -43,8 +45,8 @@
             // add the Range to the set of window selections
             window.getSelection().addRange(range);
             document.execCommand('copy');
-            my_h1.removeChild(my_h1.firstChild)
-            my_h1.removeChild(my_h1.firstChild)
+            window.getSelection().empty();
+
         }
         return my_button
     }
