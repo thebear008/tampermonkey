@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         instagram_pattern_file
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @include https://www.instagram.com/*
 // @author       thebear008
@@ -17,12 +17,41 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+
+
+var decodeHTML = function (html) {
+	var txt = document.createElement('textarea');
+	txt.innerHTML = html;
+	return txt.value;
+};
+
+
+function slugify (str) {
+  const from  = "ąàáäâãåæćęęèéëêìíïîłńòóöôõøśùúüûñçżź",
+      to    = "aaaaaaaaceeeeeeiiiilnoooooosuuuunczz",
+      regex = new RegExp('[' + from.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1') + ']', 'g');
+
+  if (str === null) return '';
+
+  str = String(str).toLowerCase().replace(regex, function(c) {
+    return to.charAt(from.indexOf(c)) || '-';
+  });
+
+  return str.replace(/[^\w\s-]/g, '').replace(/([A-Z])/g, '-$1').replace(/[-_\s]+/g, '-').toLowerCase();
+};
+
+
+function cleanString (str) {
+    return slugify(decodeHTML(str));
+}
+
+
     function makeButton() {
         var my_button = document.createElement('button')
         my_button.innerHTML = 'GED info'
         my_button.onclick = function() {
 
-        var insta_author = jQuery('header a')[0].innerHTML
+        var insta_author = cleanString(jQuery('header a')[0].innerHTML)
         var insta_url = window.location.href.split('/')[4]
         var year_upload = document.getElementsByTagName('time')[0].attributes.datetime.value.split("-")[0]
 

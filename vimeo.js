@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         vimeo_pattern_file
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  try to take over the world!
 // @include https://vimeo.com/*
 // @author       thebear008
@@ -14,13 +14,42 @@
 
     'use strict';
 
+var decodeHTML = function (html) {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+};
+
+
+function slugify (str) {
+  const from  = "ąàáäâãåæćęęèéëêìíïîłńòóöôõøśùúüûñçżź",
+      to    = "aaaaaaaaceeeeeeiiiilnoooooosuuuunczz",
+      regex = new RegExp('[' + from.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1') + ']', 'g');
+
+  if (str === null) return '';
+
+  str = String(str).toLowerCase().replace(regex, function(c) {
+    return to.charAt(from.indexOf(c)) || '-';
+  });
+
+  return str.replace(/[^\w\s-]/g, '').replace(/([A-Z])/g, '-$1').replace(/[-_\s]+/g, '-').toLowerCase();
+};
+
+
+function cleanString (str) {
+    return slugify(decodeHTML(str));
+}
+
+
+
     function makeButton() {
         var my_button = document.createElement('button')
         my_button.innerHTML = 'GED info'
         my_button.onclick = function() {
 
             var my_json = JSON.parse(document.querySelectorAll("script[type='application/ld+json']")[0].innerHTML)
-            var vimeo_author = my_json[0].author.name.replace( /[_#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' )
+            var vimeo_author = cleanString(my_json[0].author.name.replace( /[_#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' ));
+
             var vimeo_url = my_json[0].url.replace( /[_#!<>:"\/\\|?*]/g, '' ).replace(/[^0-9]/g, '' )
             //var vimeo_name = my_json[0].name.replace( /[#!<>:"\/\\|?*]/g, '' ).replace(/ /g, '_' )
             var year_upload = my_json[0].uploadDate.substring(0, 4)
